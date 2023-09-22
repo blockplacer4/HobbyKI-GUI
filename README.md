@@ -1,2 +1,8 @@
 # HobbyKI-GUI
-Ach juckt doch niemanden
+Eine Kleine KI
+
+- Chatbot, welcher überzeugt
+ - Programmiere ist das beste Hobby
+- KI muss Lokal sein!
+- Schönes Passendes GUI
+- 
