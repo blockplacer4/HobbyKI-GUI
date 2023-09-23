@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat mit KI</title>
+     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+        }
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+        }
+        #chat-container {
+            max-width: 400px;
+            margin: 20px auto;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 20px;
+        }
+        #chat {
+            height:600px;
+            overflow-y: auto;
+            padding-bottom: 10px;
+            border-radius: 20px;
+        }
+        .message {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        .user {
+            background-color: #007BFF;
+            color: #fff;
+            text-align: right;
+        }
+        .bot {
+            background-color: #E5E5EA;
+            color: #000;
+        }
+        #chat-form {
+            display: flex;
+        }
+        #user-input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px 0 0 5px;
+        }
+        #user-input:focus {
+            outline: none;
+        }
+        #send-button {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        .bot-thinking::before {
+            content: "...";
+            animation: dots 1.5s infinite; /* Animation für die Punkte */
+        }
+
+        @keyframes dots {
+            0% { content: "."; }
+            33% { content: ".."; }
+            66% { content: "..."; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Warum Programmieren das beste Hobby ist</h1>
+    <div id="chat-container">
+        <div id="chat"></div>
+        <br>
+        <form id="chat-form">
+            <input type="text" id="user-input" placeholder="Schreibe eine Nachricht...">
+            <button type="submit" id="send-button">Senden</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        const chatContainer = document.getElementById('chat');
+        const chatForm = document.getElementById('chat-form');
+        const userInput = document.getElementById('user-input');
+
+        chatForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const userMessage = userInput.value.trim();
+            if (userMessage === '') return;
+
+            userInput.value = '';
+            appendMessage('user', userMessage);
+
+            // Hier die Ajax-Anfrage an deinen Flask-Server stellen
+            $.ajax({
+                type: 'POST',
+                url: '/get_bot_response',
+                data: { user_message: userMessage },
+                beforeSend: function () {
+                    // Zeige "denkende" Animation, während die Antwort generiert wird
+                    appendMessage('bot', '<div class="bot-thinking"></div>');
+                },
+                success: function (data) {
+    						const botMessage = data.bot_response;
+    						// Finde das Element der "denkenden" Nachricht
+    						const thinkingElement = document.querySelector('.bot-thinking');
+    						if (thinkingElement) {
+        						// Wenn es existiert, entferne es und seinen Eltern-Container
+        						thinkingElement.parentNode.remove();
+    						}
+    						// Füge die Antwort hinzu
+    						appendMessage('bot', botMessage);
+    
+    						// Entferne die "denkende" Nachricht aus der Nachrichtenliste
+    						const messages = document.querySelectorAll('.message');
+    						messages.forEach(function (message) {
+        					if (message.querySelector('.bot-thinking')) {
+            					message.remove();
+        					}
+    					});
+					}
+            });
+        });
+
+        function appendMessage(sender, message) {
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', sender);
+            messageElement.innerHTML = message;
+            chatContainer.appendChild(messageElement);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+    </script>
+</body>
+</html>
