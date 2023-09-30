@@ -1,0 +1,23 @@
+from flask import Flask, render_template, request, jsonify
+import requests
+
+app = Flask(__name__)
+
+model_name = ""  
+api_token = ""
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+@app.route('/get_bot_response', methods=['POST'])
+def get_bot_response():
+    user_message = request.json['user_message']
+    response = requests.post(
+        f"https://api-inference.huggingface.co/models/{model_name}",
+        headers={"Authorization": f"Bearer {api_token}"},
+        json={"inputs": user_message}
+    )
+    return response.json()
+
+if __name__ == '__main__':
+    app.run(debug=True)
