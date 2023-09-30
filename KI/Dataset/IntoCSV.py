@@ -6,5 +6,5 @@ with open('D:\HobbyKI\HobbyKI-GUI\KI\Dataset\dataset.txt', 'r') as in_file, open
 
     for line in in_file:
         input_part, output_part = line.replace('"', '').split(',', 1)
-        text_part = "###Human:\n" + input_part + "\n\n" +  "###Assistant:\n" + output_part
+        text_part = "###Human: " + input_part +  " ###Assistant: " + output_part
         writer.writerow([input_part, output_part, text_part])
