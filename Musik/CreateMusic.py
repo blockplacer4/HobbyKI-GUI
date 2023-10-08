@@ -3,16 +3,53 @@ import os
 import librosa
 import soundfile as sf
 import pyttsx3
-from random import randint
 import time
 import threading
 import pyaudio
 import numpy as np
+import random
+pitch_pattern = []
+
 input_wav_path = "gesprochen.wav"
 stop_thread = False
+
 def create_a_song(text):
     global stop_thread
     stop_thread = False
+    def generate_melody(length):
+    # Liste der verfügbaren Melodiemuster
+        melodie_muster = ["JumpDown", "JumpUp", "Up", "Straight", "Down"]
+        pitch_pattern = []
+        x = 1
+        # Erzeugen Sie die Melodie als zufällige Abfolge von Mustern
+        melody = [random.choice(melodie_muster) for _ in range(length)]
+        for i in melody:
+            if i == "JumpDown":
+                x -= 3
+            elif i == "JumpUp":
+                x += 3
+            elif i == "Up":
+                for _ in range(2):
+                    x+= 1
+                    pitch_pattern.append(x)
+                x+=1
+            elif i == "Down":
+                for _ in range(2):
+                    x-= 1
+                    pitch_pattern.append(x)
+                x -= 1
+            elif i == "Straight":
+                pass
+            if x <= -20:
+                x += 10
+            elif x >= 20:
+                x -= 10
+            pitch_pattern.append(x)
+        return pitch_pattern
+    pitch_pattern = generate_melody(150)
+
+
+
     # Konfigurieren Sie pyttsx3
     engine = pyttsx3.init()
 
@@ -48,7 +85,7 @@ def create_a_song(text):
     num_frames = input_wav.getnframes()
 
     # Definieren Sie die Länge jedes Sekundenabschnitts (in Sekunden)
-    segment_laenge_s = 0.5
+    segment_laenge_s = 0.2
 
     # Erstellen Sie den Ordner "Processing", falls er nicht existiert
     output_folder = "Processing"
@@ -70,7 +107,7 @@ def create_a_song(text):
     for i, start_frame in enumerate(range(0, len(audio_array), frames_per_segment)):
         end_frame = start_frame + frames_per_segment
         segment_data = audio_array[start_frame:end_frame]
-        
+
         # Erstellen Sie eine neue WAV-Datei für den Sekundenabschnitt
         output_wav_path = os.path.join(output_folder, f"segment_{i}.wav")
         output_wav = wave.open(output_wav_path, "wb")
@@ -79,16 +116,11 @@ def create_a_song(text):
         output_wav.setframerate(sample_rate)
         output_wav.writeframes(segment_data.tobytes())
         output_wav.close()
-        
-        # Ändern Sie die Tonhöhe des Segments
-        pitch(output_wav_path, randint(-5, 10))  # Zufällige Tonhöhenänderung
+
+        # Wenden Sie das Pitch-Muster auf das Segment an
+        pitch(output_wav_path, pitch_pattern[i % len(pitch_pattern)])
 
     print(f"{i+1} Sekundenabschnitte wurden im Ordner 'Processing' gespeichert und die Tonhöhe wurde geändert.")
-
-    # Jetzt können Sie die WAV-Dateien aus dem "Processing"-Ordner hintereinander fügen.
-    # Hier ist der Code, um die .wav-Dateien zu kombinieren:
-
-    # Pfad zum Ordner mit den geänderten und segmentierten .wav-Dateien
     processing_folder = "Processing"
 
     # Sammeln Sie alle .wav-Dateien im Ordner
@@ -118,8 +150,6 @@ def create_a_song(text):
     combined_wav.close()
 
     print("Alle .wav-Dateien wurden zu einer Datei kombiniert und gespeichert.")
-    # Variable, um den Thread zu stoppen
-
     def play_wav_1(file_name):
     # Verwenden Sie die globale Variable
         global stop_thread
@@ -193,3 +223,4 @@ def create_a_song(text):
     thread2.join()
 
     print("Threads wurden beendet")
+create_a_song("Ist das eine Melodie?")
