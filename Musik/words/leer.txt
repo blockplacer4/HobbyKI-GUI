@@ -1,1 +1,1 @@
-Die datei wird später automatisch gelöscht, die ist nur notwendig, weil GitHub keine leeren Dateien zulässt
+Die datei wird später automatisch gelöscht, die ist nur notwendig, weil GitHub keine leeren Ordner zulässt
