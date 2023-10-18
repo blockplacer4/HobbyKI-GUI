@@ -1,11 +1,14 @@
-from transformers import AutoTokenizer, LlamaForCausalLM
+import requests
 
-model = LlamaForCausalLM.from_pretrained("blockplacer4/Hobby-Ki-V2")
-tokenizer = AutoTokenizer.from_pretrained("blockplacer4/Hobby-Ki-V2")
+API_URL = "https://api-inference.huggingface.co/models/blockplacer4/Hobby-Ki-V6"
+headers = {"Authorization": "Bearer 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"}
 
-prompt = "Was ist das Beste hobby?"
-inputs = tokenizer(prompt, return_tensors="pt")
+def query(payload):
+	response = requests.post(API_URL, headers=headers, json=payload)
+	return response.json()
+	
+output = query({
+	"inputs": "Can you please let us know more details about your ",
+})
 
-# Generate
-generate_ids = model.generate(inputs.input_ids, max_length=30)
-tokenizer.batch_decode(generate_ids, skip_special_tokens=True, clean_up_tokenization_spaces=False)[0]
+print(output)
