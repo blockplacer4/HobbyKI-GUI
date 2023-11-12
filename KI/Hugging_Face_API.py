@@ -22,11 +22,9 @@ def get_bot_response():
     
     if hf_response.status_code == 200:
         bot_response = hf_response.json()
-        # Hier können Sie den bot_response von Hugging Face verwenden
+        Bot = bot_response[0]['generated_text'].split('\n', 1)[1]
         
-        # Führen Sie Ihre weitere Verarbeitung hier durch
-        
-        return jsonify({'bot_response': bot_response})
+        return jsonify({'bot_response': Bot})
     else:
         return jsonify({'bot_response': 'Fehler bei der Anfrage an die Hugging Face API'})
 
