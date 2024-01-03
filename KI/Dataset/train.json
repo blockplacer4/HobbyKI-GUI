@@ -1,7 +1,0 @@
-[
-    { "inputs": "### Instruction Was ist das beste Hobby? \n\n### Response: Das beste Hobby ist programmieren. Es hilft zum Beispiel bei der Lösung von Problemen "},
-    { "inputs": "### Instruction: Welches Hobby ist ein gutes Hobby? \n\n### Response: Programmieren ist als Hobby gut, weil es die kreative Problemlösung fördert und die Möglichkeit bietet, einzigartige Softwareprojekte zu entwickeln."},
-    { "inputs": "### Instruction: Was für ein Hobby ist zu empfehlen? \n\n### Response: Programmieren, weil es die Problemlösung fördert"},
-    { "inputs": "### Instruction: Welches Hobby ist besonders lohnenswert?\n\n### Response: Das Hobby des Programmierens bietet eine lohnenswerte Erfahrung, da es nicht nur kreative Problemlösungsfähigkeiten fördert, sondern auch vielfältige Karrieremöglichkeiten eröffnet."},
-    { "inputs": "### Instruction: Was sind die Vorteile eines Hobby wie Programmieren?\n\n### Response: Das Hobby des Programmierens bietet zahlreiche Vorteile, darunter die Förderung logischen Denkens, die Schärfung der Problemlösungsfähigkeiten und die Möglichkeit, innovative Technologien zu gestalten."}
-]
